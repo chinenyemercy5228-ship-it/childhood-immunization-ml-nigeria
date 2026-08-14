@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Local datasets / DHS restricted data
+*.sav
+*.dta
+*.csv
+*.xlsx
+*.xls
+
+# Model artifacts (add explicitly only if intended for release)
+*.pkl
+*.joblib
+*.h5
+*.hdf5
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
