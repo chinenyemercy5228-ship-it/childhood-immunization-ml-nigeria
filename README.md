@@ -1,127 +1,236 @@
 # Machine Learning-Based Prediction of Complete Childhood Immunization in Nigeria
 
-## Overview
+## 📌 Project Overview
 
-This project develops and evaluates machine learning models for predicting **complete childhood immunization status among Nigerian children aged 12–23 months**, using the **2023–24 Nigeria Demographic and Health Survey (NDHS) Children's Recode (KR) dataset**.
+Childhood immunization remains an important public health challenge in Nigeria, where substantial disparities in vaccination coverage persist across socioeconomic and geographic groups.
 
-The project combines public health research with machine learning to explore whether routinely collected child, maternal, household, socioeconomic, media-exposure, and healthcare-utilization characteristics can help identify patterns associated with childhood immunization completeness.
+This project applies machine learning to predict **complete childhood immunization status among children aged 12–23 months in Nigeria**, using data derived from the **2023–24 Nigeria Demographic and Health Survey (NDHS)**.
 
-## Research Question
+The project compares multiple machine learning algorithms, applies hyperparameter tuning and class balancing, and uses model interpretability techniques to identify the factors that contribute most strongly to immunization status.
 
-Which characteristics are most useful for predicting complete childhood immunization among Nigerian children aged 12–23 months, and which machine learning approach provides the strongest overall predictive performance?
+> **Key finding:** Antenatal care (ANC) attendance and timing emerged as the strongest predictors in the final model.
 
-## Dataset
+---
 
-The analysis used the 2023–24 NDHS Children's Recode (KR) file. The raw DHS dataset is **not included in this repository** because it is subject to DHS data-use terms.
+## 🎯 Objectives
 
-After restricting the data to children aged 12–23 months, constructing the immunization outcome, and applying the documented cleaning rules, the final analytic sample contained **4,527 children**:
+The project aimed to:
 
-- 3,037 (67.09%) not fully immunized
-- 1,490 (32.91%) fully immunized
+- Explore demographic, socioeconomic, and healthcare-utilization characteristics associated with childhood immunization.
+- Develop machine learning models for predicting complete immunization status.
+- Compare baseline and hyperparameter-tuned models.
+- Evaluate models using Accuracy, Precision, Recall, F1-score, and ROC-AUC.
+- Identify important predictors using feature importance and SHAP analysis.
+- Translate the findings into relevant public health insights.
 
-Complete immunization was defined from nine basic vaccine doses: BCG, OPV0–3, Pentavalent 1–3, and Measles 1.
+---
 
-## Methodology
+## 📊 Dataset
 
-The project followed a reproducible machine learning workflow:
+The analysis uses the **2023–24 Nigeria Demographic and Health Survey (NDHS) Children's Recode dataset**.
 
-1. Data cleaning and outcome construction
-2. Exploratory data analysis
-3. Feature engineering and cardinality reduction
-4. Stratified 80/20 train-test split
-5. Mixed-type preprocessing using `ColumnTransformer`
-6. Model training and comparison
-7. Hyperparameter tuning with five-fold `GridSearchCV`
-8. Evaluation using Accuracy, Precision, Recall, F1-score, and ROC-AUC
-9. Feature-importance analysis
-10. SHAP-based model interpretation
+The study focused on children aged **12–23 months** and used a defined nine-dose basic immunization outcome comprising:
 
-### Models evaluated
+- BCG
+- OPV 0–3
+- Pentavalent 1–3
+- Measles 1
 
-Eleven model configurations were compared across five algorithm families:
+After data cleaning and preprocessing, the final analytical sample contained:
 
-- Logistic Regression
-- Decision Tree
-- Random Forest
-- XGBoost
-- Support Vector Machine (SVM)
+**4,527 children**
 
-## Final Model
+### Outcome distribution
 
-The **Tuned Random Forest** was selected as the final model in consultation with the project supervisor.
+| Immunization Status | Frequency | Percentage |
+|---|---:|---:|
+| Not fully immunized | 3,037 | 67.09% |
+| Fully immunized | 1,490 | 32.91% |
 
-| Metric | Tuned Random Forest |
+The raw NDHS dataset is **not included in this repository**.
+
+---
+
+## 🧹 Data Preparation
+
+The analysis involved:
+
+- Selecting children aged 12–23 months.
+- Constructing the complete immunization outcome.
+- Cleaning missing and inconsistent responses.
+- Grouping high-cardinality categorical variables.
+- Creating a composite media-exposure variable.
+- Encoding categorical variables.
+- Preparing numerical and categorical predictors for modelling.
+- Addressing class imbalance during model development.
+
+Feature engineering reduced the processed feature space from a potential **213 columns to 39 features**.
+
+---
+
+## 🔎 Exploratory Data Analysis
+
+Exploratory analysis examined:
+
+- Immunization status distribution
+- Child age and sex
+- Maternal characteristics
+- Antenatal care attendance
+- Timing of first ANC visit
+- Maternal education
+- Household wealth
+- Place of delivery
+- Geographic and socioeconomic differences
+- Relationships between predictors and immunization status
+
+The outcome was moderately imbalanced, with 67.09% of children classified as not fully immunized and 32.91% classified as fully immunized.
+
+---
+
+## 🤖 Machine Learning Models
+
+The project evaluated **11 models** across five algorithm families:
+
+1. Logistic Regression
+2. Decision Tree
+3. Random Forest
+4. XGBoost
+5. Support Vector Machine
+
+Both baseline and tuned versions were evaluated where applicable.
+
+Hyperparameter tuning was performed using **five-fold GridSearchCV**, with class balancing incorporated to improve minority-class detection.
+
+---
+
+## 🏆 Final Model
+
+The **Tuned Random Forest** was selected as the final model.
+
+### Final model performance
+
+| Metric | Score |
 |---|---:|
 | Accuracy | 59.16% |
 | Precision | 43.38% |
 | Recall | 79.19% |
 | F1-score | 0.5606 |
-| ROC-AUC | 0.6985 |
+| ROC-AUC | **0.6985** |
 
-The tuned Random Forest achieved the **highest ROC-AUC among all eleven models**. The Tuned SVM achieved a marginally higher F1-score (0.5642), but the difference was small; the Random Forest was preferred based on its ROC-AUC, competitive F1-score, Precision, Accuracy, interpretability, and the project supervisor's recommendation.
+The Tuned SVM achieved a slightly higher F1-score of 0.5642, but the Tuned Random Forest achieved the **highest ROC-AUC of all 11 models** and was selected as the final model.
 
-## Key Findings
-
-The strongest predictors in the final Random Forest were primarily related to maternal healthcare utilization and socioeconomic conditions.
-
-The top features included:
-
-1. Number of ANC visits — 29.09%
-2. Month of first ANC visit — 19.31%
-3. Mother's education — 8.08%
-4. Household wealth index — 6.27%
-5. Place of delivery: Home — 6.23%
-6. Media exposure — 4.00%
-
-The number and timing of antenatal care visits together accounted for approximately **48.4% of the model's total feature importance**.
-
-These findings suggest that antenatal care represents an important point of contact for integrating immunization counselling, scheduling, and follow-up interventions.
-
-## Repository Structure
+### Random Forest hyperparameters
 
 ```text
-immunization-ml-project/
+n_estimators = 300
+max_depth = 5
+min_samples_leaf = 2
+min_samples_split = 2
+max_features = "sqrt"
+class_weight = "balanced"
+🔍 Model Interpretability
+
+Feature importance and SHAP analysis were used to understand the predictors contributing to the final Random Forest model.
+
+Top predictors
+Rank	Feature	Importance
+1	Number of ANC Visits	0.2909
+2	Month of First ANC Visit	0.1931
+3	Mother's Education	0.0808
+4	Household Wealth Index	0.0627
+5	Place of Delivery: Home	0.0623
+6	Media Exposure	0.0400
+7	Mother's Age	0.0340
+
+The number of ANC visits and timing of the first ANC visit together accounted for approximately 48.4% of the model's total feature importance.
+
+This highlights the potential importance of maternal healthcare contact as an opportunity for immunization promotion and scheduling.
+
+💡 Public Health Significance
+
+The findings suggest that maternal healthcare utilization, particularly antenatal care attendance and timing, is strongly associated with childhood immunization status in this dataset.
+
+Potential programmatic implications include:
+
+Integrating immunization counselling and scheduling into ANC contacts.
+Strengthening outreach to mothers with no or late ANC attendance.
+Supporting maternal education and household economic empowerment.
+Promoting facility-based delivery as an additional opportunity for immunization promotion.
+Testing predictive tools prospectively within routine health information systems before individual-level implementation.
+
+These findings should be interpreted as predictive associations, not proof of causality.
+
+🛠️ Technologies Used
+Python
+Pandas
+NumPy
+Matplotlib
+Seaborn
+Scikit-learn
+XGBoost
+SHAP
+Jupyter Notebook
+Git & GitHub
+📁 Repository Structure
+childhood-immunization-ml-nigeria/
+│
 ├── notebooks/
 │   └── Immunization_Project.ipynb
+│
 ├── reports/
 │   └── Immunization_Research_Report.docx
+│
+├── .gitignore
 ├── README.md
-├── requirements.txt
-└── .gitignore
-```
+└── requirements.txt
+▶️ How to Use
+1. Clone the repository
+git clone https://github.com/chinenyemercy5228-ship-it/childhood-immunization-ml-nigeria.git
+2. Navigate to the project
+cd childhood-immunization-ml-nigeria
+3. Install dependencies
+pip install -r requirements.txt
+4. Open the notebook
+jupyter notebook notebooks/Immunization_Project.ipynb
 
-The notebook expects the cleaned modelling dataset used during development. Because the original NDHS data are governed by data-use restrictions, the dataset is intentionally excluded from this repository.
+The raw NDHS dataset is not included in this repository and must be obtained through the appropriate DHS data access process.
 
-## Tools & Technologies
+📚 Research Report
 
-- Python
-- Pandas
-- NumPy
-- Matplotlib
-- Seaborn
-- Scikit-learn
-- XGBoost
-- SHAP
-- Joblib
-- Jupyter Notebook
+The complete research report is available in:
 
-## Public Health Relevance
+reports/Immunization_Research_Report.docx
 
-The project demonstrates how machine learning can complement public health analysis by moving beyond descriptive associations toward predictive screening. The findings highlight antenatal care as a potentially valuable entry point for strengthening immunization promotion and identifying populations that may require additional outreach.
+The report contains the detailed methodology, exploratory analysis, model evaluation, feature importance analysis, SHAP interpretation, discussion, conclusions, and recommendations.
 
-The model is a **research prototype**, not a clinical diagnostic or autonomous decision-making system. Prospective validation, fairness assessment, and integration with appropriate routine health information systems would be required before operational use.
+⚠️ Limitations
 
-## Ethical Considerations
+This project has several limitations:
 
-The study used secondary, de-identified NDHS data accessed under the applicable DHS data-use terms. No personally identifiable information is included in this repository.
+The analysis uses cross-sectional survey data.
+Predictive associations should not be interpreted as causal relationships.
+The model's performance is moderate and would require further validation before operational deployment.
+Some potentially important factors, such as facility-level vaccine stock-outs, travel time to immunization facilities, and caregiver knowledge or attitudes, were not available in the dataset used.
+Prospective validation would be necessary before using such a model for individual-level targeting.
+🔮 Future Work
 
-## Author
+Future development could explore:
 
-**Elechi Chinenye Mercy**  
-Public Health | AI & Machine Learning
+Additional healthcare facility-level data.
+Geospatial measures such as travel time to immunization facilities.
+Caregiver knowledge and attitudes.
+Ensemble or stacking approaches.
+Prospective validation using routine health information systems.
+Fairness and equity assessment across socioeconomic and geographic groups.
+Deployment as a public-health decision-support tool.
+👩🏽‍💻 Author
 
-## Citation / Project Reference
+Elechi Chinenye Mercy
 
-This repository accompanies the research project:
+Public Health Professional | AI & Machine Learning
 
-**“Machine Learning-Based Prediction of Complete Childhood Immunization Among Nigerian Children Using the Nigeria Demographic and Health Survey (NDHS) 2023–24 Dataset.”**
+Interested in applying data science, machine learning, and automation to public health challenges.
+
+📌 Disclaimer
+
+This project is an academic and research-oriented machine learning study. It is intended to demonstrate predictive modelling and public health analytics and should not be used as a standalone clinical or public-health decision-making system without further validation.
